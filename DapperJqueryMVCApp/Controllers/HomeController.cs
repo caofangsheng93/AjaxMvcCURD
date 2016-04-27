@@ -83,7 +83,7 @@ namespace DapperJqueryMVCApp.Controllers
 
         public PartialViewResult EmployeeDetail()
         {
-            return PartialView("_EmployeeDetails");
+            return PartialView("EmployeeDetail");
         }
     }
 }

@@ -1,0 +1,58 @@
+﻿<table id="TblEmpDet" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>City</th>
+            <th>Address</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+
+</table>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Get the list of employee records in json format   
+        var tr;
+        $.getJSON("/Home/Index", function (i, EmpData) {
+            var EmpId = EmpData.Id;
+            tr = $('<tr/>');
+            tr.append("<td class='Name'>" + EmpData.Name + "</td>");
+            tr.append("<td class='City'>" + EmpData.City + "</td>");
+            tr.append("<td class='Address'>" + EmpData.Address + "</td>");
+            tr.append("<td><a href='/Home/DeleteEmployee'" + EmpId +
+                " OnClick='return false;' class='DeleteCss'>Delete</a>" + "|" +
+                "<a href='/Home/EditEmployee/'" + EmpId + " class='EditClass'>Update</a> </td>");
+            $("#TblEmpDet").append(tr);
+        });
+    });
+
+    $("#TblEmpDet").on('click', 'td a.DeleteCss', function () {
+        var deleteURL = $(this).attr('href');
+        if (confirm("你确定要删除这个记录么？"))
+        {
+            $.ajax({
+                url: deleteURL,
+                dataType: "json",
+                type: "POST",
+                contentType: "application/json",
+                error: function (result)
+                {
+                    alert("Unable to delete records" + result.responseText);
+                },
+                success: function (result)
+                {
+                    $('#DivEmpList').load("/Home/EmployeeDetail");
+
+                }
+
+
+
+            });
+
+        }
+
+    });
+
+</script>

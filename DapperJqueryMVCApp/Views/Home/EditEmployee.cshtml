@@ -1,20 +1,21 @@
 ﻿@model DapperJqueryMVCApp.Models.EmpModel
 
 @{
-    ViewBag.Title = "AddEmployee";
+    ViewBag.Title = "EditEmployee";
 }
 
-<h2>AddEmployee</h2>
+<h2>EditEmployee</h2>
 
-
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>EmpModel</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id, new { @id = "hdnId" })
+
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -41,62 +42,51 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" id="btnSave" class="btn btn-default" />
+                <input type="submit" value="Save" id="btnUpdate" class="btn btn-default" />
             </div>
         </div>
-
-        <div class="form-group" id="DivEmpList">
-            <div class="col-lg-12">
-                @Html.Partial("EmployeeDetail")
-            </div>
-
-        </div>
-
     </div>
 }
 
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
-
+<script src="~/Scripts/jquery-1.10.2.intellisense.js"></script>
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
-<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        //firing function on button click 
-        $("#btnSave").click(function () {
-            //Creating Javascript array to post it as json data  
+        $("#btnUpdate").click(function () {
+
             var empModel = new
                 {
+                    Id: $("hdnId").val(),
                     Name: $("#Name").val(),
                     City: $("#City").val(),
                     Address: $("#Address").val()
-
                 };
 
+
             $.ajax({
-                url: "Home/AddEmployee",
-                type: "post",
+                url: "/Home/EditEmployee",
+                type: "POST",
                 dataType: "json",
                 contentType: "application/json",
-                data: JSON.stringify({ model: empModel }),
-                // model就是方法中的参数：  public JsonResult AddEmployee(EmpModel model)
-                //JSON.stringify从一个对象中解析出字符串
-                error: function (response)
+                data: JSON.stringify({
+                    model:empModel
+                }),
+                error: function (result)
                 {
-                    alert(response.responseText);
+
+                    alert(result.responseText);
                 },
-                //After successfully inserting records  
-                success: function (response)
+                success: function (result)
                 {
-                    //Reload Partial view to fetch latest added records  
-                    $('#DivEmpList').load("/Home/EmployeeDetail");
-                    alert(response);
+                    alert(result);
+
+                    //修改成功之后，跳转到添加页面
+                    window.location.href = "/Home/AddEmployee";
 
                 }
-
-
 
 
 
@@ -104,11 +94,8 @@
 
 
 
-           
-
-
-
         });
+
 
 
 
