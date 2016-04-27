@@ -15,16 +15,22 @@
     $(document).ready(function () {
         //Get the list of employee records in json format   
         var tr;
-        $.getJSON("/Home/Index", function (i, EmpData) {
-            var EmpId = EmpData.Id;
-            tr = $('<tr/>');
-            tr.append("<td class='Name'>" + EmpData.Name + "</td>");
-            tr.append("<td class='City'>" + EmpData.City + "</td>");
-            tr.append("<td class='Address'>" + EmpData.Address + "</td>");
-            tr.append("<td><a href='/Home/DeleteEmployee'" + EmpId +
-                " OnClick='return false;' class='DeleteCss'>Delete</a>" + "|" +
-                "<a href='/Home/EditEmployee/'" + EmpId + " class='EditClass'>Update</a> </td>");
-            $("#TblEmpDet").append(tr);
+        $.getJSON("/Home/Index", function (json) {
+            $.each(json, function (i, EmpData) {
+                var EmpId = EmpData.Id;
+                tr = $('<tr/>');
+                tr.append("<td class='Name'>" + EmpData.Name + "</td>");
+                tr.append("<td class='City'>" + EmpData.City + "</td>");
+                tr.append("<td class='Address'>" + EmpData.Address + "</td>");
+                tr.append("<td><a href='/Home/DeleteEmployee'" + EmpId +
+                    " OnClick='return false;' class='DeleteCss'>Delete</a>" + "|" +
+                    "<a href='/Home/EditEmployee/'" + EmpId + " class='EditClass'>Update</a> </td>");
+                $("#TblEmpDet").append(tr);
+
+
+            })
+
+           
         });
     });
 
